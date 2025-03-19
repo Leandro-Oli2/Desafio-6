@@ -19,9 +19,8 @@ namespace FarmacySystem.view
 
         static void Main()
         {
-            // CrudSale crud = new CrudSale();
-            
-            // crud.InsertSales("Customer", DateTime.UtcNow, 1, 1);
+
+            //Slk leandro mexe em nada mano
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
