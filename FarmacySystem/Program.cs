@@ -1,16 +1,20 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using FarmacySystem.view;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 using FarmacySystem.controller;
 
-using FarmacySystem.model;
 
 namespace FarmacySystem.view
 {
     static class Program
     {
+        
+        // static void Main(string[] args)
+        // {
+        //     CrudSale sale = new CrudSale();
+        //     DateTime dateTime= DateTime.Now;
+        //     sale.InsertSales("Thiago", dateTime, 150, 1);
+        // }
         [STAThread]
 
         static void Main()

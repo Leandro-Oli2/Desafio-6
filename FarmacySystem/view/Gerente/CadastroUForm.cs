@@ -1,17 +1,20 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using FarmacySystem.controller;
 
-namespace FarmacySystem
+namespace FarmacySystem.view
 {
     public partial class FormCadastro : Form
     {
+        private MainForm mainForm;
+        private CrudUser crudUser;
         private Panel headerPanel = null!;
         private Label lblHeader = null!;
         private Label lblNome = null!;
         private TextBox txtNome = null!;
         private Label lblCargo = null!;
-        private TextBox txtCargo = null!;
+        private ComboBox cmbCargo = null!;
         private Label lblLogin = null!;
         private TextBox txtLogin = null!;
         private Label lblSenha = null!;
@@ -19,9 +22,11 @@ namespace FarmacySystem
         private Button btnVoltar = null!;
         private Button btnEnviar = null!;
 
-        public FormCadastro()
+        public FormCadastro(MainForm mainform)
         {
             InitializeComponent();
+            this.mainForm = mainform;
+            this.crudUser = new CrudUser();
             this.Resize += new EventHandler(ResizeForm);
         }
 
@@ -56,21 +61,31 @@ namespace FarmacySystem
             lblNome = CreateLabel("Nome");
             txtNome = CreateTextBox();
             lblCargo = CreateLabel("Cargo");
-            txtCargo = CreateTextBox();
+            cmbCargo = CreateComboBox();
+            cmbCargo.Items.AddRange(["Gerente", "Farmaceutico", "Vendedor"]);
             lblLogin = CreateLabel("Login (CPF)");
             txtLogin = CreateTextBox();
             lblSenha = CreateLabel("Senha");
             txtSenha = CreateTextBox();
             txtSenha.PasswordChar = '*';
 
-            btnVoltar = CreateButton("Voltar", Color.FromArgb(255, 102, 102), (s, e) => this.Close());
+            btnVoltar = CreateButton("Voltar", Color.FromArgb(255, 102, 102), (s, e) => mainForm.TrocarTela(new ManagerForm(mainForm)));
             btnEnviar = CreateButton("Enviar", Color.FromArgb(75, 0, 110), (s, e) =>
             {
-                MessageBox.Show("Cadastro efetuado com sucesso!", "Sucesso");
-                this.Close();
+                try
+                {
+                    crudUser.InsertUser(txtNome.Text, cmbCargo.Text, txtLogin.Text, txtSenha.Text);
+                    MessageBox.Show("Cadastro efetuado com sucesso!", "Sucesso");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Falha no cadastro!\n{ex.Message}", "Erro");
+                }
+                
+                mainForm.TrocarTela(new ManagerForm(mainForm));
             });
 
-            this.Controls.AddRange(new Control[] { lblNome, txtNome, lblCargo, txtCargo, lblLogin, txtLogin, lblSenha, txtSenha, btnVoltar, btnEnviar });
+            this.Controls.AddRange(new Control[] { lblNome, txtNome, lblCargo, cmbCargo, lblLogin, txtLogin, lblSenha, txtSenha, btnVoltar, btnEnviar });
             ResizeForm(null, null);
         }
 
@@ -93,10 +108,21 @@ namespace FarmacySystem
                 Font = new Font("Segoe UI", 12F, FontStyle.Regular)
             };
         }
+        private ComboBox CreateComboBox()
+        {
+            return new ComboBox
+            {
+                Size = new Size(250, 30),
+                BackColor = Color.FromArgb(255, 255, 255),
+                Font = new Font("Segoe UI", 12F, FontStyle.Regular),
+                DropDownWidth = 250,
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+        }
 
         private Button CreateButton(string text, Color color, EventHandler onClick)
         {
-            return new Button
+            var button = new Button
             {
                 Text = text,
                 Size = new Size(120, 40),
@@ -104,8 +130,12 @@ namespace FarmacySystem
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Font = new Font("Segoe UI", 12F, FontStyle.Bold),
-                Cursor = Cursors.Hand
+                Cursor = Cursors.Hand,
             };
+
+            button.Click += onClick; // Adiciona o evento de clique
+
+            return button;
         }
 
         private void ResizeForm(object? sender, EventArgs? e)
@@ -118,7 +148,7 @@ namespace FarmacySystem
             lblNome.Location = new Point(centerX - lblNome.Width / 2, startY);
             txtNome.Location = new Point(centerX - txtNome.Width / 2, startY + 25);
             lblCargo.Location = new Point(centerX - lblCargo.Width / 2, startY + spacing * 2);
-            txtCargo.Location = new Point(centerX - txtCargo.Width / 2, startY + spacing * 2 + 25);
+            cmbCargo.Location = new Point(centerX - cmbCargo.Width / 2, startY + spacing * 2 + 25);
             lblLogin.Location = new Point(centerX - lblLogin.Width / 2, startY + spacing * 4);
             txtLogin.Location = new Point(centerX - txtLogin.Width / 2, startY + spacing * 4 + 25);
             lblSenha.Location = new Point(centerX - lblSenha.Width / 2, startY + spacing * 6);

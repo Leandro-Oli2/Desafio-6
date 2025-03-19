@@ -17,20 +17,22 @@ namespace FarmacySystem.controller
                 db.SaveChanges();
             }
         }
+        
         public List<string> ListReports()
         {
             List<string> ReportList = new List<string>();
 
             using (var db = new AppDbContext())
             {
-                var Report = db.Reports.ToList();
-                foreach (var reports in Report)
+                var reports = db.Reports.ToList();
+                foreach (var report in reports)
                 {
-                    ReportList.Add($"{reports.Id}{reports.Description}{reports.CreatedAt}{reports.UserId}");
+                    ReportList.Add($"{report.Id}|{report.Description}|{report.CreatedAt:yyyy-MM-dd}|{report.UserId}");
                 }
             }
             return ReportList;
         }
+
         public void ReportsUpdate(int id, string? description = null, DateTime? createdAt = null, int? userId = null)
         {
             using (var db = new AppDbContext())

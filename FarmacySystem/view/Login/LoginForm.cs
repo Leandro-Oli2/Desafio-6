@@ -36,7 +36,7 @@ namespace FarmacySystem.view
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.Sizable;
             this.MaximizeBox = true; 
-            this.BackColor = Color.FromArgb(255, 245, 245); 
+            this.BackColor = Color.FromArgb(180, 180, 251);
 
             // Painel de Cabeçalho (roxo)
             headerPanel = new Panel
@@ -137,9 +137,12 @@ namespace FarmacySystem.view
                 {
                     Form telaUsuario = role switch
                 {
-                    "gerente" => new ManagerForm(),
+
+                    "gerente" => new ManagerForm(mainForm),
                     "farmaceutico" => new FarmaceuticoForm(),
-                    _ => new SalesmanForm()
+                    "vendedor" => new SalesmanForm(),
+                    _ => throw new Exception("Role not exists"),
+
                 };
 
                 mainForm.TrocarTela(telaUsuario);

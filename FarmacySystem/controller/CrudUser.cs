@@ -11,15 +11,15 @@ namespace FarmacySystem.controller
 {
     public class CrudUser
     {
-        public void InsertUser(int id, string name, string role, string cpf, string password)
+        public void InsertUser(string name, string role, string cpf, string password)
         {
            try
             {
-                if (role != "farmaceutico" || role != "gerente" || role != "atendente")
+                if (role != "farmaceutico" && role != "gerente" && role != "atendente")
                     throw new Exception($"Invalid Role for User: {role}\nOnly can be: farmaceutico, gerente or atendente");
                 using (var db = new AppDbContext())
                 {
-                    db.Users.Add(new User {Id = id, Name = name, Role = role, Cpf = cpf, Password = password});
+                    db.Users.Add(new User {Name = name, Role = role, Cpf = cpf, Password = password});
                     db.SaveChanges();
                     Console.WriteLine($"User {name} sucessfully created!\n");
                 }
