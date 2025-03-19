@@ -2,9 +2,11 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using FarmacySystem.controller;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using FarmacySystem.model;
+using FarmacySystem.data;
 
 namespace FarmacySystem.view
 {
@@ -210,6 +212,7 @@ namespace FarmacySystem.view
 
             Label lblCod = new Label() { Text = "ID Vendedor:", Location = new Point(20, 220) };
             idVendedor = new NumericUpDown() { Size = new Size(100, 30), Location = new Point(180, 220) };
+            
 
             Button btnRegistrar = new Button();
             btnRegistrar.Text = "Registrar Venda";
@@ -240,26 +243,30 @@ namespace FarmacySystem.view
         {
             try
             {
-                using (var context = new YourDbContext())
+
+                using (var context = new AppDbContext())
                 {
-                    var newSale = new Sale
-                    {
-                        Customer = txtCliente.Text,
-                        SaleDate = dtpData.Value,
-                        TotalValue = int.Parse(txtValor.Text),
-                        SalesmanId = int.Parse(idVendedor.Text)
-                    };
+                    // Sale newSale = new Sale
+                    // {
+                    //     Customer = txtCliente.Text,
+                    //     SaleDate = dtpData.Value,
+                    //     TotalValue = decimal.Parse(txtValor.Text),
+                    //     SalesmanId = int.Parse(idVendedor.Text)
+                    // }; 
+                    crudS.InsertSales(txtCliente.Text, dtpData.Value.ToUniversalTime(),decimal.Parse(txtValor.Text),int.Parse(idVendedor.Text));
 
-                    context.Sales.Add(newSale);
-                    context.SaveChanges();
+                    // context.Sales.Add(newSale);
+                    // context.SaveChanges();
+                    
 
-                    int newSaleId = newSale.Id;
+                    // System.Console.WriteLine(newSale.Id);
+                    // int newSaleId = newSale.Id;
 
-                    crudSM.InsertSaleMedicine(
-                    int.Parse(txtNome.Text),
-                    newSaleId,
-                    int.Parse(numQtd.Text)
-                    );
+                    // crudSM.InsertSaleMedicine(
+                    // int.Parse(txtNome.Text),
+                    // newSaleId,
+                    // int.Parse(numQtd.Text)
+                    // );
 
 
                 }
@@ -268,9 +275,25 @@ namespace FarmacySystem.view
 
                 this.Close();
             }
+             catch (FormatException fe)
+            {
+                MessageBox.Show("Erro de conversão de dados. Verifique os valores inseridos nos campos numéricos.\n" + fe.Message,
+                    "Erro de Formato", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                MessageBox.Show("Erro ao salvar no banco de dados. Verifique se os dados são válidos.\n" + dbEx.Message,
+                    "Erro de Banco de Dados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (NullReferenceException nre)
+            {
+                MessageBox.Show("Erro interno: Um campo obrigatório pode estar vazio.\n" + nre.Message,
+                    "Erro de Referência Nula", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao registrar venda: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ocorreu um erro inesperado ao registrar a venda.\n" + ex.Message,
+                    "Erro Desconhecido", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

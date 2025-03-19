@@ -23,7 +23,7 @@ namespace FarmacySystem.model
         [Required]
         public decimal TotalValue { get; set; }
 
-        [Column("salesman_id")]
+        [Column("user_id")]
         [Required]
         [ForeignKey(nameof(User))]
         public int SalesmanId { get; set; }
