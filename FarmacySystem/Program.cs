@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using FarmacySystem.view;
 using FarmacySystem.controller;
 
+
 namespace FarmacySystem.view
 {
     static class Program
@@ -15,6 +16,7 @@ namespace FarmacySystem.view
         //     sale.InsertSales("Thiago", dateTime, 150, 1);
         // }
         [STAThread]
+
         static void Main()
         {
 
