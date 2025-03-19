@@ -42,7 +42,7 @@ namespace FarmacySystem.data
 
             modelBuilder.Entity<SaleMedicine>()
                 .ToTable("sales_medicines")
-                .HasIndex(sm => new { sm.StockId, sm.MedicineId })
+                .HasIndex(sm => new { sm.StockId, sm.SaleId })
                 .IsUnique();
         }
     }

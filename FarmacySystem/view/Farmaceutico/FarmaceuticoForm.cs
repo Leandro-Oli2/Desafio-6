@@ -156,6 +156,7 @@
         private TextBox txtNome, txtValor, txtCliente;
         private NumericUpDown numQtd, idVendedor;
         private DateTimePicker dtpData;
+        private CheckBox chkControlled;
 
         public FormRegistroVendas()
         {
@@ -212,10 +213,14 @@
             Label lblCod = new Label() { Text = "ID Vendedor:", Location = new Point(20, 220) };
             idVendedor = new NumericUpDown() { Size = new Size(100, 30), Location = new Point(180, 220) };
 
+            // Adicionando CheckBox para Controlled
+            Label lblControlled = new Label() { Text = "Controlado:", Location = new Point(20, 260) };
+            chkControlled = new CheckBox() { Location = new Point(180, 260) };
+
             Button btnRegistrar = new Button();
             btnRegistrar.Text = "Registrar Venda";
             btnRegistrar.Size = new Size(150, 40);
-            btnRegistrar.Location = new Point(20, 260);
+            btnRegistrar.Location = new Point(20, 300);
             btnRegistrar.BackColor = Color.OrangeRed;
             btnRegistrar.ForeColor = Color.White;
 
@@ -233,6 +238,8 @@
             formPanel.Controls.Add(dtpData);
             formPanel.Controls.Add(lblCod);
             formPanel.Controls.Add(idVendedor);
+            formPanel.Controls.Add(lblControlled);
+            formPanel.Controls.Add(chkControlled);
             formPanel.Controls.Add(btnRegistrar);
 
         }
@@ -241,25 +248,25 @@
         {
             try
             {
-                using (var context = new YourDbContext())
+
+                using (var context = new AppDbContext())
                 {
-                    var newSale = new Sale
+                    Sale newSale = new Sale
                     {
                         Customer = txtCliente.Text,
-                        SaleDate = dtpData.Value,
-                        TotalValue = int.Parse(txtValor.Text),
+                        SaleDate = dtpData.Value.ToUniversalTime(),
+                        TotalValue = decimal.Parse(txtValor.Text),
                         SalesmanId = int.Parse(idVendedor.Text)
-                    };
-
-                    context.Sales.Add(newSale);
-                    context.SaveChanges();
+                    }; 
+                    crudS.InsertSales(newSale);
 
                     int newSaleId = newSale.Id;
 
                     crudSM.InsertSaleMedicine(
                     int.Parse(txtNome.Text),
                     newSaleId,
-                    int.Parse(numQtd.Text)
+                    int.Parse(numQtd.Text),
+                    chkControlled.Checked
                     );
 
 
@@ -269,9 +276,25 @@
 
                 this.Close();
             }
+             catch (FormatException fe)
+            {
+                MessageBox.Show("Erro de conversão de dados. Verifique os valores inseridos nos campos numéricos.\n" + fe.Message,
+                    "Erro de Formato", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                MessageBox.Show("Erro ao salvar no banco de dados. Verifique se os dados são válidos.\n" + dbEx.Message,
+                    "Erro de Banco de Dados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (NullReferenceException nre)
+            {
+                MessageBox.Show("Erro interno: Um campo obrigatório pode estar vazio.\n" + nre.Message,
+                    "Erro de Referência Nula", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao registrar venda: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ocorreu um erro inesperado ao registrar a venda.\n" + ex.Message,
+                    "Erro Desconhecido", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

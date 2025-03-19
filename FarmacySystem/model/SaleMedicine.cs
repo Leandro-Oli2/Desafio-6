@@ -11,6 +11,14 @@ namespace FarmacySystem.model
         [Required]
         public int Id { get; set; }
 
+        [Column("quantity")]
+        [Required]
+        public int Quantity { get; set; }
+
+        [Column("controlled")]
+        [Required]
+        public bool Controlled { get; set; }
+
         [Column("stock_id")]
         [Required]
         [ForeignKey(nameof(Stock))]
@@ -19,11 +27,8 @@ namespace FarmacySystem.model
         [Column("sale_id")]
         [Required]
         [ForeignKey(nameof(Sale))]
-        public int MedicineId { get; set; }
+        public int SaleId { get; set; }
 
-        [Column("quantity")]
-        [Required]
-        public int Quantity { get; set; }
 
         public Stock? Stock { get; set; }
         public Sale? Sale { get; set; }
