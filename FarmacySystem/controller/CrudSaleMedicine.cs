@@ -9,11 +9,11 @@ namespace FarmacySystem.controller
 {
     public class CrudSaleMedicine
     {
-        public void InsertSaleMedicine(int stockid, int medicineId, int quantity)
+        public void InsertSaleMedicine(int stockid, int saleid, int quantity, bool controlled)
         {
             using (var db = new AppDbContext())
             {
-                db.SaleMedicines.Add(new SaleMedicine { StockId = stockid, MedicineId = medicineId, Quantity = quantity });
+                db.SaleMedicines.Add(new SaleMedicine { StockId = stockid, SaleId = saleid, Quantity = quantity, Controlled = controlled});
                 db.SaveChanges();
             }
         }
@@ -26,7 +26,7 @@ namespace FarmacySystem.controller
                 var saleMedicine = db.SaleMedicines.ToList();
                 foreach (var saleMedicines in saleMedicine)
                 {
-                    SaleMedicinetList.Add($"{saleMedicines.Id}{saleMedicines.StockId}{saleMedicines.MedicineId}{saleMedicines.Quantity}");
+                    SaleMedicinetList.Add($"{saleMedicines.Id}{saleMedicines.StockId}{saleMedicines.SaleId}{saleMedicines.Quantity}");
                 }
             }
             return SaleMedicinetList;
@@ -39,7 +39,7 @@ namespace FarmacySystem.controller
                 if (saleMedicine != null)
                 {
                     saleMedicine.StockId = stockid ?? saleMedicine.StockId;
-                    saleMedicine.MedicineId = medicineId ?? saleMedicine.MedicineId;
+                    saleMedicine.SaleId = medicineId ?? saleMedicine.SaleId;
                     saleMedicine.Quantity = quantity ?? saleMedicine.Quantity;
                     db.SaveChanges();
                     System.Console.WriteLine("Venda_Medicamento atualizado com sucesso");

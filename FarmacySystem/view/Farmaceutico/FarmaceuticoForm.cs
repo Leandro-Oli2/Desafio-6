@@ -157,6 +157,7 @@ namespace FarmacySystem.view
         private TextBox txtNome, txtValor, txtCliente;
         private NumericUpDown numQtd, idVendedor;
         private DateTimePicker dtpData;
+        private CheckBox chkControlled;
 
         public FormRegistroVendas()
         {
@@ -212,12 +213,15 @@ namespace FarmacySystem.view
 
             Label lblCod = new Label() { Text = "ID Vendedor:", Location = new Point(20, 220) };
             idVendedor = new NumericUpDown() { Size = new Size(100, 30), Location = new Point(180, 220) };
-            
+
+            // Adicionando CheckBox para Controlled
+            Label lblControlled = new Label() { Text = "Controlado:", Location = new Point(20, 260) };
+            chkControlled = new CheckBox() { Location = new Point(180, 260) };
 
             Button btnRegistrar = new Button();
             btnRegistrar.Text = "Registrar Venda";
             btnRegistrar.Size = new Size(150, 40);
-            btnRegistrar.Location = new Point(20, 260);
+            btnRegistrar.Location = new Point(20, 300);
             btnRegistrar.BackColor = Color.OrangeRed;
             btnRegistrar.ForeColor = Color.White;
 
@@ -235,6 +239,8 @@ namespace FarmacySystem.view
             formPanel.Controls.Add(dtpData);
             formPanel.Controls.Add(lblCod);
             formPanel.Controls.Add(idVendedor);
+            formPanel.Controls.Add(lblControlled);
+            formPanel.Controls.Add(chkControlled);
             formPanel.Controls.Add(btnRegistrar);
 
         }
@@ -246,27 +252,23 @@ namespace FarmacySystem.view
 
                 using (var context = new AppDbContext())
                 {
-                    // Sale newSale = new Sale
-                    // {
-                    //     Customer = txtCliente.Text,
-                    //     SaleDate = dtpData.Value,
-                    //     TotalValue = decimal.Parse(txtValor.Text),
-                    //     SalesmanId = int.Parse(idVendedor.Text)
-                    // }; 
-                    crudS.InsertSales(txtCliente.Text, dtpData.Value.ToUniversalTime(),decimal.Parse(txtValor.Text),int.Parse(idVendedor.Text));
+                    Sale newSale = new Sale
+                    {
+                        Customer = txtCliente.Text,
+                        SaleDate = dtpData.Value.ToUniversalTime(),
+                        TotalValue = decimal.Parse(txtValor.Text),
+                        SalesmanId = int.Parse(idVendedor.Text)
+                    }; 
+                    crudS.InsertSales(newSale);
 
-                    // context.Sales.Add(newSale);
-                    // context.SaveChanges();
-                    
+                    int newSaleId = newSale.Id;
 
-                    // System.Console.WriteLine(newSale.Id);
-                    // int newSaleId = newSale.Id;
-
-                    // crudSM.InsertSaleMedicine(
-                    // int.Parse(txtNome.Text),
-                    // newSaleId,
-                    // int.Parse(numQtd.Text)
-                    // );
+                    crudSM.InsertSaleMedicine(
+                    int.Parse(txtNome.Text),
+                    newSaleId,
+                    int.Parse(numQtd.Text),
+                    chkControlled.Checked
+                    );
 
 
                 }

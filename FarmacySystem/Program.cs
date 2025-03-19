@@ -20,7 +20,7 @@ namespace FarmacySystem.view
             // crud.InsertSales("Customer", DateTime.UtcNow, 1, 1);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FarmaceuticoForm());
+            Application.Run(new MainForm());
         }
     }
 }
