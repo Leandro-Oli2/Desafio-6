@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using FarmacySystem.controller;
-
 namespace FarmacySystem.view
 {
     public class MainForm : Form
