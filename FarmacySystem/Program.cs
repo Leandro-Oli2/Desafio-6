@@ -17,6 +17,8 @@ namespace FarmacySystem.view
         [STAThread]
         static void Main()
         {
+
+            //Slk leandro mexe em nada mano
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

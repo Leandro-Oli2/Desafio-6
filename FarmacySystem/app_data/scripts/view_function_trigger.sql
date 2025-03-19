@@ -29,7 +29,7 @@ CREATE OR REPLACE FUNCTION tr_atualizar_estoque()
 RETURNS TRIGGER AS $$
 BEGIN
     UPDATE stocks
-    SET quantity = quantity + NEW.quantity,
+    SET quantity = quantity - NEW.quantity,
 		updated_at = NOW()
     WHERE id = NEW.stock_id;
 
